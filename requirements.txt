@@ -1,0 +1,4 @@
+# Federated MNIST demo (Flower + PyTorch). Pin flwr<2 until apps migrate to flwr run.
+flwr>=1.8,<2
+torch>=2.0
+torchvision>=0.15
