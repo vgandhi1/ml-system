@@ -1,0 +1,47 @@
+# Optional: local MLflow tracking server with Postgres (closer to production patterns).
+# Usage from Sentinel-Stream/:
+#   docker compose -f mlops/docker-compose.mlflow.yml up -d
+# Then:
+#   export MLFLOW_TRACKING_URI=http://127.0.0.1:5000
+#   python -m src.train --mlflow
+#
+# Default artifact root is a Docker volume (fine for dev). For production use S3/GCS + managed DB.
+
+services:
+  mlflow-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: mlflow
+      POSTGRES_PASSWORD: mlflow
+      POSTGRES_DB: mlflow
+    volumes:
+      - mlflow_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mlflow -d mlflow"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  mlflow:
+    image: python:3.12-slim
+    depends_on:
+      mlflow-db:
+        condition: service_healthy
+    ports:
+      - "5000:5000"
+    environment:
+      PIP_NO_CACHE_DIR: "1"
+    command:
+      - bash
+      - -c
+      - |
+        pip install --no-cache-dir 'mlflow>=2.10,<3' 'psycopg2-binary>=2.9,<3' &&
+        exec mlflow server --host 0.0.0.0 --port 5000 \
+          --backend-store-uri postgresql://mlflow:mlflow@mlflow-db:5432/mlflow \
+          --default-artifact-root file:/mlflow/artifacts
+    volumes:
+      - mlflow_artifacts:/mlflow/artifacts
+
+volumes:
+  mlflow_pg:
+  mlflow_artifacts:

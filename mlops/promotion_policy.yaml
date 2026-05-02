@@ -1,0 +1,7 @@
+# Promotion gate: validation metrics must meet these floors before deploy / merge.
+# Tune per environment (dev vs staging vs prod). CI uses a smaller synthetic set — thresholds are conservative.
+#
+# Metric keys must match artifacts/metadata.json written by src.train.
+
+min_pr_auc_val: 0.72
+min_roc_auc_val: 0.82
