@@ -142,10 +142,14 @@ Prism-Federated/
 git clone https://github.com/vgandhi1/Prism-Federated.git
 cd Prism-Federated
 
+# 1. Create and activate a virtual environment
 python3 -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
 
+# 2. Install dependencies (we highly recommend `uv` for 10-100x faster installation)
+pip install -r requirements.txt    # Or: uv pip install -r requirements.txt
+
+# 3. Run the simulation
 python run_federated.py --num-clients 3 --num-rounds 2
 ```
 
@@ -166,11 +170,13 @@ python run_federated.py --num-clients 3 --num-rounds 2
 
 ## What you should see
 
-Flower logs rounds, fit/evaluate traffic, and a short summary. Example line:
+Flower logs rounds, fit/evaluate traffic, and a short summary. At the end, you should see the loss decreasing:
 
-`Run finished 2 round(s) … History (loss, distributed): round 1: … round 2: …`
+`Run finished 2 round(s) … History (loss, distributed): round 1: 0.083 … round 2: 0.048 …`
 
-You may see **deprecation warnings** from Flower for `start_server` / `start_numpy_client`; the MVP still uses the legacy API for simplicity. See [plan.md](plan.md) roadmap for migration options.
+> [!NOTE]
+> You will likely see verbose **deprecation warnings** from Flower (`WARNING: DEPRECATED FEATURE: flwr.server.start_server() ...`). 
+> **These are completely harmless and expected.** The MVP currently relies on Flower's legacy simulation APIs (`start_server` / `start_numpy_client`) for simplicity and will be migrated to the new `flower-superlink` architecture in a future update (see [plan.md](plan.md)).
 
 **Optional polish:** a short terminal recording saved as `docs/demo.gif` (or linked video) makes the multi-client startup easy to preview in the GitHub UI.
 
