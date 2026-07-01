@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: main
+    tables:
+      - name: online_retail
+        description: UCI Online Retail raw transaction data (seed)

@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: stg_online_retail
+    description: Cleaned and typed staging layer
+    columns:
+      - name: invoice_id
+        tests: [not_null]
+      - name: quantity
+        tests:
+          - not_null
+      - name: unit_price_usd
+        tests:
+          - not_null
+
+  - name: mart_ts_features
+    description: ML-ready feature mart for time series models
+    columns:
+      - name: week_start
+        tests: [not_null, unique]
+      - name: total_units
+        tests: [not_null]
