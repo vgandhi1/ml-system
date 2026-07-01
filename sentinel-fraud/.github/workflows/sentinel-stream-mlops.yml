@@ -1,0 +1,41 @@
+# MLOps: synthetic data → train (MLflow) → promotion gate → evaluate.
+# Repository root is this project (standalone Sentinel-Stream).
+
+name: Sentinel-Stream — train & gate
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  train-and-promote-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate synthetic dataset (CI-sized)
+        run: python scripts/generate_data.py --n-legit 12000 --n-fraud 800 --seed 7
+
+      - name: Train with MLflow tracking
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_WORKFLOW: ${{ github.workflow }}
+        run: python -m src.train --mlflow --seed 7 --mlflow-experiment sentinel_stream_ci
+
+      - name: Promotion gate (model risk)
+        run: python scripts/check_promotion.py
+
+      - name: Evaluate bundle
+        run: python -m src.evaluate
