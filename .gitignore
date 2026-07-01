@@ -1,0 +1,9 @@
+**/data/
+**/.venv/
+**/venv/
+**/models/
+**/checkpoints/
+**/node_modules/
+**/__pycache__/
+**/*.pyc
+**/.claude/
