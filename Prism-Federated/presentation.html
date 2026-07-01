@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Prism-Federated — Privacy-Preserving Distributed Intelligence</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#04100e;--card:#081916;--card2:#0c2420;--accent:#2dd4bf;--accent2:#38bdf8;--text:#effefb;--muted:#9dc4bd;--border:rgba(45,212,191,.25);--mono:'JetBrains Mono','Fira Code',Consolas,monospace}
+html{scroll-behavior:smooth}
+body{font-family:'Inter','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:52px;background:rgba(4,16,14,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:700}
+.nav-links{display:flex;gap:4px;flex-wrap:wrap}
+.nav-links a{font-size:10px;color:var(--muted);text-decoration:none;padding:5px 10px;border-radius:6px}
+.nav-links a:hover{color:var(--text);background:rgba(45,212,191,.15)}
+.slide{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:88px 72px 72px;border-bottom:1px solid rgba(45,212,191,.08);position:relative}
+.slide-num{position:absolute;top:68px;right:48px;font-family:var(--mono);font-size:10px;color:var(--muted)}
+.section-label{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.slide-title{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;margin-bottom:8px;line-height:1.2}
+.slide-title span{color:var(--accent)}
+.slide-desc{color:var(--muted);font-size:.9rem;margin-bottom:32px;max-width:760px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:20px}.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px}
+.card h3{font-size:.92rem;font-weight:600;margin-bottom:8px}.card p{font-size:.82rem;color:var(--muted);line-height:1.55}
+.bt-p{border-top:3px solid var(--accent)}.bt-g{border-top:3px solid var(--accent2)}
+.pill-row{display:flex;flex-wrap:wrap;gap:8px}.pill{font-family:var(--mono);font-size:10px;padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--muted)}
+.hero{background:radial-gradient(ellipse 70% 55% at 50% 35%,rgba(45,212,191,.12) 0%,transparent 70%);align-items:center;text-align:center}
+.hero-badge{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);border:1px solid var(--border);border-radius:20px;padding:5px 18px;margin-bottom:22px}
+.hero-h1{font-size:clamp(1.7rem,4vw,2.8rem);font-weight:900;line-height:1.1;background:linear-gradient(135deg,#fff,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px;max-width:860px}
+.hero-sub{font-size:1rem;color:var(--muted);max-width:680px;margin-bottom:32px}
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+th{background:var(--card2);color:var(--muted);padding:10px 12px;text-align:left;font-family:var(--mono);font-size:.7rem}
+td{padding:10px 12px;border-bottom:1px solid rgba(45,212,191,.08)}
+.arch{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;font-family:var(--mono);font-size:.68rem;line-height:1.5;white-space:pre;color:var(--muted);overflow-x:auto}
+.final{align-items:center;text-align:center}
+.final-link{display:inline-block;margin:8px;padding:10px 24px;border-radius:8px;background:var(--accent);color:#04100e;font-weight:700;text-decoration:none;font-size:.85rem}
+.final-link.alt{background:transparent;border:1px solid var(--accent);color:var(--accent)}
+@media(max-width:900px){.slide{padding:72px 24px 56px}.g2,.g3{grid-template-columns:1fr}.nav-links{display:none}}
+</style>
+</head>
+<body>
+<nav><div class="nav-logo">PRISM-FEDERATED // ml-system</div><div class="nav-links"><a href="#hero">Intro</a><a href="#why">Why</a><a href="#arch">Topology</a><a href="#today">Vision vs Today</a><a href="#stack">Stack</a><a href="#links">Links</a></div></nav>
+
+<section class="slide hero" id="hero">
+  <div class="hero-badge">ML Systems Pillar · Federated Learning</div>
+  <h1 class="hero-h1">Prism-Federated</h1>
+  <p class="hero-sub">Privacy-preserving distributed intelligence for sensitive data silos. Train a <b>global model without centralizing raw data</b> — only model weights move over gRPC. Runnable FedAvg-on-MNIST lab with Flower + PyTorch.</p>
+  <div class="pill-row" style="justify-content:center"><span class="pill">Flower</span><span class="pill">PyTorch</span><span class="pill">FedAvg</span><span class="pill">gRPC</span></div>
+</section>
+
+<section class="slide" id="why">
+  <div class="slide-num">01</div><div class="section-label">The Problem</div>
+  <h2 class="slide-title">The hurdle isn't the algorithm — it's <span>data access</span></h2>
+  <p class="slide-desc">Under GDPR/HIPAA, sensitive workloads (e.g. medical imagery) can't leave each site's firewall. Prism-Federated trains a shared global model across simulated hospital sites where <b>no raw patient data crosses the wire</b> — only model updates flow to a central aggregator.</p>
+</section>
+
+<section class="slide" id="arch">
+  <div class="slide-num">02</div><div class="section-label">Topology</div>
+  <h2 class="slide-title">Weights move, <span>data doesn't</span></h2>
+  <div class="arch">  Hospital A --local training--\
+  Hospital B --local training---+--( protected model updates only )--> [ Aggregator ]
+  Hospital C --local training--/                                         FedAvg + global model
+      (raw records never leave each firewall)
+  Why gRPC over Protobuf: compact binary framing for large float-tensor weight transfer
+  vs text-heavy REST+JSON re-serialization.</div>
+</section>
+
+<section class="slide" id="today">
+  <div class="slide-num">03</div><div class="section-label">Honest Scope</div>
+  <h2 class="slide-title">Target vision vs <span>this repo today</span></h2>
+  <table>
+    <tr><th>Capability</th><th>Target vision</th><th>This repo today</th></tr>
+    <tr><td>Data distribution</td><td>Non-IID / label skew, Prism local–global decomposition</td><td>IID MNIST shards</td></tr>
+    <tr><td>Stragglers</td><td>fraction_fit &lt; 1, timeouts</td><td>all clients each round (1.0)</td></tr>
+    <tr><td>Privacy of updates</td><td>TLS, SecAgg/MPC, RDP (ε,δ) accounting</td><td>cleartext localhost gRPC</td></tr>
+    <tr><td>Personalization</td><td>local adapters / split heads on shared trunk</td><td>single shared CNN</td></tr>
+  </table>
+</section>
+
+<section class="slide" id="stack">
+  <div class="slide-num">04</div><div class="section-label">Stack</div>
+  <h2 class="slide-title">Reproducible <span>federated lab</span></h2>
+  <div class="pill-row" style="margin-top:12px"><span class="pill">Flower (flwr)</span><span class="pill">PyTorch</span><span class="pill">FedAvg</span><span class="pill">gRPC / Protobuf</span><span class="pill">MNIST CNN</span><span class="pill">Rényi DP (roadmap)</span></div>
+</section>
+
+<section class="slide final" id="links">
+  <div class="section-label">ML Systems Pillar</div>
+  <h2 class="slide-title">Part of <span>vgandhi1/ml-system</span></h2>
+  <p class="slide-desc" style="text-align:center">Batch forecasting · real-time fraud · federated privacy. Prism-Federated is the privacy-preserving leg.</p>
+  <div><a class="final-link" href="https://github.com/vgandhi1/ml-system/tree/main/Prism-Federated">Source →</a><a class="final-link alt" href="https://github.com/vgandhi1/ml-system">ML-system pillar →</a></div>
+</section>
+</body>
+</html>
